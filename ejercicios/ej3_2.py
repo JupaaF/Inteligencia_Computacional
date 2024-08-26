@@ -64,10 +64,10 @@ pendiente=-(w_r[1]/w_r[2])
 
 ordenada = w_r[0]/w_r[2]
 
-x1 = np.linspace(-1.1, 1.1, 1000, endpoint=False)
+x1 = np.linspace(-2, 2, 1000, endpoint=False)
 x2 = ordenada + pendiente*x1
 
-plt.plot(x1, x2, marker='o', linestyle='-', color='b')
+plt.plot(x1, x2, marker='.', linestyle='-', color='b',linewidth=0.01)
 plt.scatter(x[:,1], x[:,2], color='g', marker='.')
 plt.scatter(p[:,1], p[:,2], color='r', marker='.')
 
