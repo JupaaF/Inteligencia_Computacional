@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 
 #leer archivo:
 #entrenamiento
-or_csv = np.loadtxt('C:\\Users\\piliv\\OneDrive\\Documentos\\FACU\\Inteligencia Computacional\\Trabajos prácticos\\Guia1\\OR_trn.csv', delimiter=',')
+or_csv = np.loadtxt('archivos/OR_trn.csv', delimiter=',')
 #prueba
-xor_csv = np.loadtxt('C:\\Users\\piliv\\OneDrive\\Documentos\\FACU\\Inteligencia Computacional\\Trabajos prácticos\\Guia1\\XOR_trn.csv', delimiter=',')
+xor_csv = np.loadtxt('archivos/XOR_trn.csv', delimiter=',')
 [f_or,c_or]= or_csv.shape
 [f_xor,c_xor]= xor_csv.shape
 

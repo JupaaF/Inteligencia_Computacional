@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 
 #leer archivo:
 #entrenamiento
-x = np.loadtxt('C:\\Users\\piliv\\OneDrive\\Documentos\\FACU\\Inteligencia Computacional\\Trabajos prácticos\\Guia1\\OR_90_trn.csv', delimiter=',')
+x = np.loadtxt('archivos/OR_90_trn.csv', delimiter=',')
 #prueba
-p = np.loadtxt('C:\\Users\\piliv\\OneDrive\\Documentos\\FACU\\Inteligencia Computacional\\Trabajos prácticos\\Guia1\\OR_90_tst.csv', delimiter=',')
+p = np.loadtxt('archivos/OR_90_tst.csv', delimiter=',')
 
 # PROBAMOS LA PRUEBA CON EL DE 50 tambien :D
 
