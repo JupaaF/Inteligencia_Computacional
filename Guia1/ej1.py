@@ -4,9 +4,9 @@ import random
 
 #leer archivo:
 #entrenamiento
-x = np.loadtxt('OR_trn.csv', delimiter=',')
+x = np.loadtxt('archivos/OR_trn.csv', delimiter=',')
 #prueba
-p = np.loadtxt('OR_tst.csv', delimiter=',')
+p = np.loadtxt('archivos/OR_tst.csv', delimiter=',')
 [filas,columnas]= x.shape
 [filasp,columnasp]= p.shape
 
