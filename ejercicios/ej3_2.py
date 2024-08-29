@@ -3,6 +3,23 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
+def graficar(w_r):
+    pendiente=-(w_r[1]/w_r[2])
+    ordenada = w_r[0]/w_r[2]
+
+    x1 = np.linspace(-1.1, 1.1, 1000, endpoint=False)
+    x2 = ordenada + pendiente*x1
+    plt.clf()
+    plt.title('Gráfico de Líneas')
+    plt.xlabel('Eje X1')
+    plt.ylabel('Eje X2')
+    plt.axhline(0, color='black', linewidth=1)  # Línea horizontal en y=0
+    plt.axvline(0, color='black', linewidth=1)  # Línea vertical en x=0
+    plt.plot(x1, x2, marker='.', linestyle='-', linewidth=0.01)
+    plt.scatter(x[:,1], x[:,2], color='g', marker='.')    
+    plt.ylim(-1.5,1.5)
+    plt.xlim(-1.5,1.5)
+    plt.pause(0.1)
 #leer archivo:
 #entrenamiento
 x = np.loadtxt('archivos/OR_90_trn.csv', delimiter=',')
@@ -30,6 +47,14 @@ w_r = np.zeros(columnas-1)
 for i in range(w_r.size):
     w_r[i] = np.random.uniform(0.0, 1.0)-0.5
 
+
+#plot
+# Añadir título y etiquetas
+
+plt.grid(True)
+plt.ion()
+
+
 #tasa de aprendizaje
 v = 0.01
 #tasa de desempeño
@@ -39,13 +64,15 @@ d2 = 0
 it = 0
 
 #bucle para entrenar
-while  d1/filas < 0.99 and it <500:
+while  d1/filas < 0.95 and it <10:
     d1=0
     it+=1
     for i in range(filas):
         y = np.dot(w_r,x[i,:columnas-1]) #calculamos y
         for j in range(columnas-1):
             w_r[j] = w_r[j]+ v*(yd[i]-y)*x[i,j] #corregimos pesos
+        if(i%50 == 1):
+            graficar(w_r)
   
     for t in range(filas):
         y = np.dot(w_r,x[t,:columnas-1]) #calculamos y
@@ -59,23 +86,3 @@ for i in range(filasp):
 print(f'Desempeño Entrenamiento: {100*d1/filas} ')
 print(f'Desempeño Prueba: {100*d2/filasp} ')
 
-
-pendiente=-(w_r[1]/w_r[2])
-
-ordenada = w_r[0]/w_r[2]
-
-x1 = np.linspace(-2, 2, 1000, endpoint=False)
-x2 = ordenada + pendiente*x1
-
-plt.plot(x1, x2, marker='.', linestyle='-', color='b',linewidth=0.01)
-plt.scatter(x[:,1], x[:,2], color='g', marker='.')
-plt.scatter(p[:,1], p[:,2], color='r', marker='.')
-
-# Añadir título y etiquetas
-plt.title('Gráfico de Líneas')
-plt.xlabel('Eje X1')
-plt.ylabel('Eje X2')
-plt.axhline(0, color='black', linewidth=1)  # Línea horizontal en y=0
-plt.axvline(0, color='black', linewidth=1)  # Línea vertical en x=0
-plt.grid(True)
-plt.show()

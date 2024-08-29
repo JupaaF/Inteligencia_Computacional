@@ -1,4 +1,5 @@
 import numpy as np
+import time
 import matplotlib.pyplot as plt
 
 def graficar(w_r):
@@ -7,9 +8,17 @@ def graficar(w_r):
 
     x1 = np.linspace(-1.1, 1.1, 1000, endpoint=False)
     x2 = ordenada + pendiente*x1
-
+    plt.clf()
+    plt.title('Gráfico de Líneas')
+    plt.xlabel('Eje X1')
+    plt.ylabel('Eje X2')
+    plt.axhline(0, color='black', linewidth=1)  # Línea horizontal en y=0
+    plt.axvline(0, color='black', linewidth=1)  # Línea vertical en x=0
     plt.plot(x1, x2, marker='.', linestyle='-', linewidth=0.01)
+    plt.scatter(or_csv[:,1], or_csv[:,2], color='g', marker='.')    
     plt.ylim(-1.5,1.5)
+    plt.xlim(-1.5,1.5)
+    plt.pause(0.1)
      
 #leer archivo:
 #entrenamiento
@@ -31,7 +40,7 @@ for i in range(w_r.size):
     w_r[i] = np.random.uniform(0.0, 1.0)-0.5
 
 #tasa de aprendizaje
-v = 0.001
+v = 0.01
 #tasa de desempeño
 d1 = 0
 #ITERACIONES ENTRENAMIENTO
@@ -39,16 +48,12 @@ it = 0
 
 #plot
 # Añadir título y etiquetas
-plt.title('Gráfico de Líneas')
-plt.xlabel('Eje X1')
-plt.ylabel('Eje X2')
-plt.axhline(0, color='black', linewidth=1)  # Línea horizontal en y=0
-plt.axvline(0, color='black', linewidth=1)  # Línea vertical en x=0
-plt.grid(True)
 
+plt.grid(True)
+plt.ion()
 
 #bucle para entrenar
-while  d1/f_or< 0.99 and it <50:
+while  d1/f_or< 0.74 and it <10:
     d1=0
     it+=1
     for i in range(f_or):
@@ -64,5 +69,6 @@ while  d1/f_or< 0.99 and it <50:
         y = np.dot(w_r,or_csv[t,:c_or-1]) #calculamos y
         y = np.sign(y)
         if(yd_or[t]== y): d1+=1
-plt.scatter(or_csv[:,1], or_csv[:,2], color='g', marker='.')     
+ 
+print(f'Desempeño Prueba: {100*d1/f_or} ')
 plt.show()
