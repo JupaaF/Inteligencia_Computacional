@@ -42,17 +42,20 @@ while d1/filas < 0.99 and it <500:
     it+=1
     for i in range(filas):
         y = np.dot(w_r,x[i,:columnas-1]) #calculamos y
+        y = np.sign(y)
         for j in range(columnas-1):
             w_r[j] = w_r[j]+ v*(yd[i]-y)*x[i,j] #corregimos pesos
   
     for t in range(filas):
         y = np.dot(w_r,x[t,:columnas-1]) #calculamos y
-        if(yd[t]== np.sign(y)): d1+=1
+        y = np.sign(y)
+        if(yd[t]== y): d1+=1
 
 #prueba
 for i in range(filasp):
     y = np.dot(w_r,p[i,:columnas-1]) #calculamos y
-    if(yd_p[i]== np.sign(y)): d2+=1      
+    y = np.sign(y)
+    if(yd_p[i]== y): d2+=1      
 
 print(f'Desempeño Entrenamiento: {100*d1/filas} ')
 print(f'Desempeño Prueba: {100*d2/filasp} ')
