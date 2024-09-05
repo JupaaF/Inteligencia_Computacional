@@ -1,1 +1,1 @@
-delta_W
+archivos/XOR_trn

@@ -7,9 +7,9 @@ def sigmoide(z,a):
 
 #leer archivos: ----------------
 #entrenamiento
-data_TR = np.loadtxt('archivos/OR_trn.csv', delimiter=',')
+data_TR = np.loadtxt('archivos/XOR_trn.csv', delimiter=',')
 #prueba
-data_TE = np.loadtxt('archivos/OR_tst.csv', delimiter=',')
+data_TE = np.loadtxt('archivos/XOR_tst.csv', delimiter=',')
 [cant_filas,cant_columnas]= data_TR.shape
 [cant_filas_p,cant_columnas_p]= data_TE.shape
 
@@ -17,7 +17,7 @@ data_TE = np.loadtxt('archivos/OR_tst.csv', delimiter=',')
 # PARAMETROS A DEFINIR: -----------------
 ###  ENTRADAS
 # vector v con la cantidad de neuronas por capa:
-vector_num_neuronas = [4,3,1]
+vector_num_neuronas = [2,1]
 cant_capas = len(vector_num_neuronas)
 cant_entradas = 2
 vector_num_neuronas = np.hstack((cant_entradas, vector_num_neuronas))
@@ -119,7 +119,7 @@ while  tasa < 0.99 and it <20: #--------- Epocas
             y = np.sign(y) #------------> usamos la signo para que concuerde con las y deseadas
             lista_salidas[j] = y
             #hay que comparar con la salida deseada
-        
+
         if(yd[i]== lista_salidas[-1]):
             d_TR+=1
 
