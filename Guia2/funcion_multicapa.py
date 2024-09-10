@@ -49,13 +49,17 @@ def multicapa(cant_it, nom_trn,nom_tst,vector_num_neuronas,cant_entradas,tasa_ap
 
     # #ITERACIONES ENTRENAMIENTO
     it = 0
-    tasa = 0
+    tasa = np.empty(cant_it,object)
+    tasa[-1] = 0
     d_TR = 0
     d_TE = 0
     mse = np.empty(cant_it,object)
+
+    mse_aux = 0
+    contador = 0
     #----------------ENTRENAMIENTO-------------------------------------------------------
 
-    while  tasa<tasa_corte and it<cant_it: #--------- Epocas
+    while  tasa[it-1]<tasa_corte and it<cant_it: #--------- Epocas
 
         for i in range(cant_filas): #------------- Patron
             d_TR = 0
@@ -121,11 +125,11 @@ def multicapa(cant_it, nom_trn,nom_tst,vector_num_neuronas,cant_entradas,tasa_ap
                     # y = np.dot(lista_pesos[j], y_aux.T)
                     y = lista_pesos[j]@y_aux.T
                 # Salida NO LINEAL
-                y = np.sign(y) #------------> usamos la signo para que concuerde con las y deseadas
+                y = sigmoide(y,1) #------------> usamos la signo para que concuerde con las y deseadas
                 lista_salidas[j] = y
                 #hay que comparar con la salida deseada
 
-            if(yd[i]== lista_salidas[-1]):
+            if(yd[i]== np.sign(lista_salidas[-1])):
                 d_TR+=1
             salidas_trn[i]=lista_salidas[-1]
         
@@ -135,10 +139,20 @@ def multicapa(cant_it, nom_trn,nom_tst,vector_num_neuronas,cant_entradas,tasa_ap
             mse[it]+= np.dot(e[:,u],e[:,u])
         mse[it] = mse[it]/cant_filas
 
-        tasa= d_TR/cant_filas
-        print(mse[it], it)
-        it+=1
+        tasa[it]= d_TR/cant_filas
         
+        ## si la tasa esta bajando y el contador es mayor al 10% de la cantidad de iteraciones
+        if((mse[it] > mse_aux) and (contador > cant_it*0.1)): 
+            tasa_aprendizaje = tasa_aprendizaje*0.5
+            mse_aux = mse[it]
+            contador = 0
+        else:
+            contador += 1
+            mse_aux = mse[it]
+        
+        print(mse[it], it, tasa_aprendizaje)
+        it+=1
+
 
 
 
@@ -160,11 +174,11 @@ def multicapa(cant_it, nom_trn,nom_tst,vector_num_neuronas,cant_entradas,tasa_ap
                 y = lista_pesos[j]@y_aux.T
             # Salida NO LINEAL
 
-            y = np.sign(y) #------------> usamos la signo para que concuerde con las y deseadas
+            y = sigmoide(y,1) #------------> usamos la signo para que concuerde con las y deseadas
             lista_salidas[j] = y
             #hay que comparar con la salida deseada
         
-        if(yd_TE[i]== lista_salidas[-1]):
+        if(yd_TE[i]== np.sign(lista_salidas[-1])):
             d_TE+=1
 
         salidas_prueba[i] = lista_salidas[-1]
@@ -174,7 +188,7 @@ def multicapa(cant_it, nom_trn,nom_tst,vector_num_neuronas,cant_entradas,tasa_ap
 
 
 
-    print(f'Desempeño Entrenamiento: {100*tasa} ')
+    print(f'Desempeño Entrenamiento: {100*tasa[it-1]} ')
     print(f'Iteraciones Entrenamiento: {it}')
     print(f'Desempeño Prueba: {100*tasa_TE} ')
 
@@ -191,7 +205,7 @@ def multicapa(cant_it, nom_trn,nom_tst,vector_num_neuronas,cant_entradas,tasa_ap
     centro_id = 0
     afuera_id = 0
     for i in range(cant_filas_p):
-        if(salidas_prueba[i]==1):
+        if(np.sign(salidas_prueba[i])==1):
             centro[centro_id,:] = data_TE[i,:]
             centro_id+=1
         else:
@@ -199,12 +213,25 @@ def multicapa(cant_it, nom_trn,nom_tst,vector_num_neuronas,cant_entradas,tasa_ap
             afuera_id+=1
 
     # print(salidas_prueba)
+    plt.figure(1)
     plt.scatter(centro[:,1], centro[:,2],color='r', marker='*', linewidths=0.01) 
     plt.scatter(afuera[:,1], afuera[:,2],color='b', marker='o', linewidths=0.01) 
-    plt.show()  
+    # plt.show()  
     x = np.linspace(0,it-1,it)
-    print(x)
+
+    plt.figure(2)
+    plt.title('MSE')
+    plt.xlabel('Épocas')
+    plt.ylabel('Error Cuadrático Instantáneo')
     plt.plot(x,mse[0:it])
     plt.ylim(0,4)
+    # plt.show()  
+
+    plt.figure(3)
+    plt.title('Tasa de desempeño')
+    plt.xlabel('Épocas')
+    plt.ylabel('Tasa')
+    plt.plot(x,tasa[0:it])
+
     plt.show()
     

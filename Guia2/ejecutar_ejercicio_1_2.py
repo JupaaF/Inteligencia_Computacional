@@ -1,10 +1,10 @@
-cant_it = 50000
+cant_it = 3000
 nom_training = 'Guia2/concent_trn.csv'
 nom_testing = 'Guia2/concent_tst.csv'
-vec_neuronas = [10,4,1]
+vec_neuronas = [6,1]
 cant_entradas = 2
-tasa_aprendizaje = 0.001
-tasa_corte = 0.95
+tasa_aprendizaje = 0.01
+tasa_corte = 0.99
 
 from funcion_multicapa import multicapa
 
