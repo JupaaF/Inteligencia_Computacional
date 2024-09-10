@@ -29,15 +29,16 @@ data_TE = np.loadtxt('Guia2/irisbin_tst.csv', delimiter=',')
 # PARAMETROS A DEFINIR: -----------------
 ###  ENTRADAS
 # vector v con la cantidad de neuronas por capa:
-vector_num_neuronas = [4,3]
+vector_num_neuronas = [8,4,3]
 cant_capas = len(vector_num_neuronas)
 cant_entradas = 4
 vector_num_neuronas = np.hstack((cant_entradas, vector_num_neuronas))
 #tasa de aprendizaje
-v = 0.1
+v = 0.001
 #variable para la tasa
 d = 0
 cant_iteraciones = 1000
+
 
 #agregar columna de x0 al principo
 x0= np.full(cant_filas, -1).reshape(-1, 1)
@@ -70,7 +71,7 @@ d_TE = 0
 mse = np.empty(cant_iteraciones,object)
 #----------------ENTRENAMIENTO-------------------------------------------------------
 
-while  tasa < 0.95 and it <cant_iteraciones: #--------- Epocas
+while  tasa < 0.98 and it <cant_iteraciones: #--------- Epocas
 
     for i in range(cant_filas): #------------- Patron
         d_TR = 0
@@ -136,20 +137,24 @@ while  tasa < 0.95 and it <cant_iteraciones: #--------- Epocas
                 # y = np.dot(lista_pesos[j], y_aux.T)
                 y = lista_pesos[j]@y_aux.T
             # Salida NO LINEAL
-            y = np.sign(y) #------------> usamos la signo para que concuerde con las y deseadas
+            y = winner_takes_all(y) #------------> usamos la signo para que concuerde con las y deseadas
             lista_salidas[j] = y
             #hay que comparar con la salida deseada
-
-        w_t_a = winner_takes_all(lista_salidas[-1])
-        if(np.array_equal(yd[i],w_t_a)):
+    
+        #if(yd[i]== lista_salidas[-1]):
+        if(np.array_equal(yd[i],lista_salidas[-1])):
             d_TR+=1
-        salidas_trn[i]=w_t_a
+        salidas_trn[i]=lista_salidas[-1]
     
     e = yd-salidas_trn
-    mse[it] = e@e.T/cant_filas
+    mse[it] = 0
+    for u in range(cant_salidas):
+        mse[it]+= np.dot(e[:,u],e[:,u])
+    mse[it] = mse[it]/cant_filas
 
     tasa= d_TR/cant_filas
-
+    print(it, mse[it])
+    it+=1
 
 
 
@@ -175,14 +180,12 @@ for i in range(cant_filas_p): #-------------------- Patrones
         lista_salidas[j] = y
         #hay que comparar con la salida deseada
     
+    #if(yd[i]== lista_salidas[-1]):
     if(np.array_equal(yd_TE[i],lista_salidas[-1])):
         d_TE+=1
 
     salidas_prueba[i] = lista_salidas[-1]
     
-    it+=1
-
-
 tasa_TE= d_TE/cant_filas_p
 
 
@@ -190,3 +193,8 @@ tasa_TE= d_TE/cant_filas_p
 print(f'Desempeño Entrenamiento: {100*tasa} ')
 print(f'Iteraciones Entrenamiento: {it}')
 print(f'Desempeño Prueba: {100*tasa_TE} ')
+
+x = np.linspace(0,it-1,it)
+plt.plot(x,mse[0:it])
+plt.ylim(0,10)
+plt.show()

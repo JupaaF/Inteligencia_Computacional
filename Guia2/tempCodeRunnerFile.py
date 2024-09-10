@@ -1,1 +1,1 @@
-archivos/XOR_trn
+10
