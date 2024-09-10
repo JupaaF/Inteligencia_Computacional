@@ -62,7 +62,7 @@ d_TE = 0
 mse = np.empty(cant_iteraciones,object)
 #----------------ENTRENAMIENTO-------------------------------------------------------
 
-while  tasa < 0.95 and it <cant_iteraciones: #--------- Epocas
+while  tasa < 0.98 and it <cant_iteraciones: #--------- Epocas
 
     for i in range(cant_filas): #------------- Patron
         d_TR = 0
@@ -137,10 +137,11 @@ while  tasa < 0.95 and it <cant_iteraciones: #--------- Epocas
         salidas_trn[i]=lista_salidas[-1]
     
     e = yd-salidas_trn
-    mse[it] = e@e.T/cant_filas
 
+    mse[it] = np.sum(e*e)/cant_filas
+    
     tasa= d_TR/cant_filas
-
+    print(mse[it])
 
 
 
