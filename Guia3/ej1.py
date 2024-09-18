@@ -9,7 +9,9 @@ import matplotlib.pyplot as plt
 digits = load_digits()
 
 #Particionar datos
-x_trn, x_tst, y_trn, y_tst = train_test_split(digits.data, digits.target, test_size=0.33, random_state=42) #???
+x_trn, x_tst, y_trn, y_tst = train_test_split(digits.data, digits.target, test_size=0.33, random_state=42)
+#test_size= 
+# random_state = valor para inicializar el generador aleatorio
 
 #Definir modelo
 clf = MLPClassifier(hidden_layer_sizes=(20,10),learning_rate_init=0.005,max_iter=300,activation='logistic',early_stopping=True,validation_fraction=0.3,shuffle=True,random_state=0)
