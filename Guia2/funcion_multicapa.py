@@ -234,4 +234,4 @@ def multicapa(cant_it, nom_trn,nom_tst,vector_num_neuronas,cant_entradas,tasa_ap
     plt.plot(x,tasa[0:it])
 
     plt.show()
-    
+    print(lista_pesos)
