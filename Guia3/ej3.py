@@ -53,7 +53,10 @@ for train_index, test_index in kf.split(x):
     y_pred[2] = clf.predict(x_test)
     ACC[2].append(accuracy_score(y_test,y_pred[2])) ## calcula la tasa de precisión
 
-print(y_pred)
+    print(y_test)
+
+
+# print(y_pred)
 yens = np.zeros(len(y_pred[0]))
 
 for j in range (len(y_pred[0])):
@@ -61,8 +64,9 @@ for j in range (len(y_pred[0])):
         yens[j] += y_pred[i][j]
     yens[j] = round(yens[j]/3)
 
-
-print(f'promedio salidas {yens}')
+yens = yens.astype(int)
+print(yens)
+# print(f'promedio salidas {yens}')
 
 
 # # Mostrar información del dataset
