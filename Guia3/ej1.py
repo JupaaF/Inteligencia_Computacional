@@ -28,7 +28,7 @@ ACC_10 = []
 
 
 ##--------#Definir modelo ----------------
-clf = MLPClassifier(hidden_layer_sizes=(12,6),learning_rate_init=0.005,max_iter=300,activation='logistic',early_stopping=True,validation_fraction=0.3,shuffle=True,random_state=0)
+clf = MLPClassifier(hidden_layer_sizes=(12,6),learning_rate_init=0.005,max_iter=300,activation='logistic',early_stopping=True,validation_fraction=0.3,shuffle=True)
 ## hidden_layer_sizes() : define estructura capas ocultas
 ## activation : función de activación
 ## learning_rate_init : tasa de aprendizaje
@@ -69,7 +69,7 @@ for train_index, test_index in kf_5.split(x):
     y_train, y_test = y[train_index], y[test_index]
     
     clf = MLPClassifier(hidden_layer_sizes=(12,6),learning_rate_init=0.005,max_iter=300,activation='logistic',early_stopping=True,validation_fraction=0.3,shuffle=True,random_state=0)
-
+    ## es ideal cambiar el ramdom state para variar la semilla del rand
     #Entrenar modelo
     clf.fit(x_train,y_train)
     #Evaluar modelo
