@@ -57,6 +57,8 @@ for train_index, test_index in kf.split(x):
 promedio_tasa = np.mean(ACC,axis=1)
 std_tasa = np.var(ACC,axis=1)
 
-print(promedio_tasa)
-print(f'tasa y varianza baggin : {promedio_tasa[0]}, {std_tasa[0]}')
-print(f'tasa y varianza adaboost : {promedio_tasa[1]}, {std_tasa[1]}')
+err_B = (1-promedio_tasa[0])
+err_A = (1-promedio_tasa[1])
+
+print(f'tasa y varianza baggin : {promedio_tasa[0]}, {std_tasa[0]}, respecto de adaboost:  {np.round((err_A-err_B)/err_A,2)*100}%')
+print(f'tasa y varianza adaboost : {promedio_tasa[1]}, {std_tasa[1]}, respecto de baggin:  {np.round((err_B-err_A)/err_B,2)*100}%')

@@ -58,12 +58,12 @@ for train_index, test_index in kf_5.split(x):
     ACC[2].append(accuracy_score(y_test,y_pred)) ## calcula la tasa de precisión
 
     ## SVM Base Radial
-    clf = svm.SVC(kernel='rbf',gamma=1)
+    clf = svm.SVC(kernel='rbf',gamma=1) #---> Gamma: Controla la "influencia" de una sola muestra. Si gamma es muy alto, una muestra individual tendrá un radio de influencia más pequeño, y el modelo podría sobreajustarse. Por el contrario, si es muy bajo, la influencia es mayor y el modelo podría subajustarse.
     clf.fit(x_train,y_train)
     y_pred = clf.predict(x_test)
     ACC[3].append(accuracy_score(y_test,y_pred)) ## calcula la tasa de precisión
 
-    ## Análisis Discriminante Lineal
+    ## Análisis Discriminante Lineal -->  encuentra un hiperplano que maximiza la distancia entre las medias de las clases mientras minimiza la variación dentro de cada clase.
     clf = LinearDiscriminantAnalysis()
     clf.fit(x_train,y_train)
     y_pred = clf.predict(x_test)
@@ -85,10 +85,34 @@ for train_index, test_index in kf_5.split(x):
 media = []
 varianza = []
 
+print('------------------ ')
+print('Varianzas y medias:')
 clasificadores = ['Multicapa','Naive Bayes','SVM polinomial ','SVM Base Radial','Análisis Discriminante Lineal','Árbol de Decisión','KNN']
 for i in range (7):
     media.append(np.mean(ACC[i]))
     varianza.append(np.var(ACC[i]))
     print(f'{clasificadores[i]}: media = {media[i]}, varianza = {varianza[i]}')    
 
-print(y_pred)
+#Calculamos el error relativo para comparar el desempeño del mlp respecto al resto:
+Er = []
+error_rel_mlp = []
+for i in range(7):
+    Er.append(1 - media[i])
+
+print(Er)
+
+for i in range(1,7):
+    error_rel_mlp.append((Er[0]- Er[i])/Er[0])
+
+print('------------------ ')
+print('Respecto de MLP:')
+for i in range(6):
+    print(f'{clasificadores[i+1]} implica una mejora del {np.round(error_rel_mlp[i],2)*100}%')
+  
+
+
+ 
+
+
+
+
