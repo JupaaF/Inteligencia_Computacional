@@ -23,6 +23,7 @@ N1 = 7
 N2 = 7
 
 pesos = np.empty((N1,N2), object)
+dif_aux = np.empty((N1,N2), object)
 distancias = np.empty((N1,N2), object)
 
 for i in range(N1):
@@ -53,6 +54,8 @@ while(it < cant_epocas):
                 #(o implementar guardando el min, con sus indices)
                 distancias[i,j]= np.dot(dif,dif.T) # calculamos la distancia euclidea pero sin hacer la raiz
                 # print(distancias[i,j])
+        
+        
         #Seleccion de la neurona ganadora
         fila_ganadora, columna_ganadora = indice_minimo(distancias)
         
@@ -60,7 +63,6 @@ while(it < cant_epocas):
         dif_aux = x[p]-pesos[fila_ganadora,columna_ganadora]
 
         # matriz_ganadores[fila_ganadora,columna_ganadora] += 1
-
         delta_w = v*dif_aux
 
         #### maximizar el ajuste del delta_w

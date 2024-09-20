@@ -9,6 +9,7 @@ def radio(r, pesos, fila, columna,delta_w,tamanio_fila,tamanio_columna, id ):
     for i in range (-r,r+1):
         if((columna+i < tamanio_columna) and (columna+i != -1)):
             pesos[fila,columna+i] += delta_w
+            print(pesos[fila,columna+i])
     
     if(r == 0): 
         return   

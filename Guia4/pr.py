@@ -2,23 +2,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ### prueba minimo
-def indice_minimo(matrix):
-    # Encontrar el índice del elemento mínimo en la matriz "aplanada"
-    index_min = np.argmin(matrix)
+# def indice_minimo(matrix):
+#     # Encontrar el índice del elemento mínimo en la matriz "aplanada"
+#     index_min = np.argmin(matrix)
     
-    # Convertir el índice del vector aplanado a coordenadas (i, j)
-    indices = np.unravel_index(index_min, matrix.shape)
+#     # Convertir el índice del vector aplanado a coordenadas (i, j)
+#     indices = np.unravel_index(index_min, matrix.shape)
     
-    return indices
+#     return indices
 
-size = 6
-num_elements = size * size
-random_elements = np.random.permutation(num_elements) + 1  # Generar números del 1 al 36 en orden aleatorio
-matrix = random_elements.reshape(size, size)
-print(matrix)
+# size = 6
+# num_elements = size * size
+# random_elements = np.random.permutation(num_elements) + 1  # Generar números del 1 al 36 en orden aleatorio
+# matrix = random_elements.reshape(size, size)
+# print(matrix)
 
-fila, columna= indice_minimo(matrix)
-print(fila,columna)
+# fila, columna= indice_minimo(matrix)
+# print(fila,columna)
 
 
 
