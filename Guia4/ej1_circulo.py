@@ -28,15 +28,16 @@ fig = plt.figure()
 #  -------------------------------------------
 
 # -------------- ORDENAMIENTO GLOBAL --------------
-cant_epocas = 10
+cant_epocas = 15
 it = 0
-r = 3
+r = int(N1/2)
 v = 0.7
 i_ganadora = 0
 j_ganadora = 0
 contador = 0
 g = 2 # graficar cada g iteraciones
 
+print('Iteraciones ORDENAMIENTO GLOBAL')
 while(it<cant_epocas):
     it+=1
     print(it)
@@ -66,18 +67,21 @@ while(it<cant_epocas):
 
 
 # -------------- TRANSICION --------------
-cant_epocas = 30
+cant_epocas = 20
 it = 0
-r = 2
-v = 0.3
+r_cte = r -1
+v_cte = v- 0.1
 i_ganadora = 0
 j_ganadora = 0
 contador = 0
 g = 2 # graficar cada g iteraciones
 
+print('Iteraciones TRANSICION')
 while(it<cant_epocas):
     it+=1
     print(it)
+    r = int(r_cte*(cant_epocas - it)/cant_epocas) + 1
+    v = (v_cte*(cant_epocas - it)/cant_epocas) + 0.1
 
     for p in range(cant_filas): # Para cada patron x: --------
         menor_d = 1000000
@@ -104,13 +108,14 @@ while(it<cant_epocas):
 # -------------- CONVERGENCIA --------------
 cant_epocas = 30
 it = 0
-r = 1
-v = 0.1
+r = 0
+v = 0.09
 i_ganadora = 0
 j_ganadora = 0
 contador = 0
 g = 2 # graficar cada g iteraciones
 
+print('Iteraciones CONVERGENCIA')
 while(it<cant_epocas):
     it+=1
     print(it)
