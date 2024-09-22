@@ -15,12 +15,12 @@ def indice_minimo(matrix):
     return indices
 
 #leer archivos: -------------------
-x = np.loadtxt('Guia4\circulo.csv', delimiter=',')
+x = np.loadtxt('Guia4/circulo.csv', delimiter=',')
 [cant_filas,cant_columnas]= x.shape
 
 #Parámetros --------------------
-N1 = 7
-N2 = 7
+N1 = 4
+N2 = 4
 
 pesos = np.empty((N1,N2), object)
 dif_aux = np.empty((N1,N2), object)
@@ -42,8 +42,8 @@ v = 0.9
 matriz_ganadores = np.empty((N1,N2),int)
 
 # Inicializamos la ventana de la gráfica
-# plt.ion()  # Modo interactivo para actualizar la gráfica
-# fig = plt.figure()
+plt.ion()  # Modo interactivo para actualizar la gráfica
+fig = plt.figure()
 
 while(it < cant_epocas):
     it+=1
@@ -73,15 +73,15 @@ while(it < cant_epocas):
         # print(delta_w)
         radio(r, pesos, fila_ganadora, columna_ganadora,delta_w, N1, N2, 0)
 
-    if(it == 100):
-        print(pesos)
-        exit()
+    # if(it == 100):
+    #     print(pesos)
+    #     exit()
     
-    # if(contador > cant_epocas*0.1):
-    #     contador = 0
-    #     graficar_vecinos(pesos)
-    # else:
-    #     contador+=1
+    if(contador > cant_epocas*0.1):
+        contador = 0
+        graficar_vecinos(pesos)
+    else:
+        contador+=1
 
 ### print de prueba
 # print(matriz_ganadores)
@@ -92,8 +92,8 @@ while(it < cant_epocas):
 
 
 #### terminar de graficar
-# plt.ioff()  # Desactivar modo interactivo
-# plt.show()  # Mostrar la última imagen
+plt.ioff()  # Desactivar modo interactivo
+plt.show()  # Mostrar la última imagen
     
 
 ##### -------- TRANSICIÓN ----------
