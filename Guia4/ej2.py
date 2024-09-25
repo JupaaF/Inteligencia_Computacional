@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-x = np.loadtxt('Guia4\circulo.csv', delimiter=',')
+x = np.loadtxt('Guia4/circulo.csv', delimiter=',')
 [cant_filas,cant_columnas]= x.shape
 cant_max_it = 1000
 k = 4
