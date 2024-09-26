@@ -8,6 +8,9 @@ import random
 x = np.loadtxt('Guia4/irisbin_trn.csv', delimiter=',')
 [cant_filas,cant_columnas]= x.shape
 x = x[:,:-3]
+
+######----------------------------------------SOM------------------------------------------------
+
 #Parmetros del SOM ----------
 N1 = 7#(4x4)
 N2 = 7
@@ -64,9 +67,6 @@ while(it<cant_epocas):
     if(it % g == 0):
         graficar_vecinos(pesos)
     
-
-
-
 # -------------- TRANSICION --------------
 cant_epocas = 20
 it = 0
@@ -145,10 +145,12 @@ while(it<cant_epocas):
 plt.ioff()  # Desactivar modo interactivo
 plt.show()  # Mostrar la última imagen
 
+
+# GENERACION DE CLUSTERS -----------------------------
 x = np.loadtxt('Guia4/irisbin_trn.csv', delimiter=',')
 v_medias = gen_cluster_iris(pesos,x)
 x= x[:,:-3]
-indices = [[] for _ in range(3)]
+indices = [[] for _ in range(3)] #<---- acá están los índices de 3 clusters, [[1],[2],[3]]
 for i in range (cant_filas):
         dist_min = 10000
         indice_min = 0
@@ -211,3 +213,48 @@ while it<cant_max_it:
                 todos_ceros = False
     if(todos_ceros):
         break
+
+#CONSTRUCCIÓN MATRIZ DE CONTINGENCIA
+#Tenemos que comprarar todos contra todos
+matriz_contingencia = np.empty((3,3), object)
+
+for i in range(3): #--> Recorre clusters SOM
+    for j in range(3): #--> Recorre clusters KMEDIAS
+        matriz_contingencia[i,j] = np.intersect1d(np.array(indices[i]), np.array(indices_k[j]))
+
+suma_filas = []
+for fila in matriz_contingencia:
+    suma = 0
+    for array in fila:
+        suma += len(array)  # Sumar la cantidad de elementos de cada array
+    suma_filas.append(suma)
+
+suma_columnas = []
+n_columnas = matriz_contingencia.shape[1]  # Número de columnas en la matriz
+for col in range(n_columnas):
+    suma = 0
+    for fila in matriz_contingencia:
+        suma += len(fila[col])  # Sumar la cantidad de elementos de cada array en la columna actual
+    suma_columnas.append(suma)
+
+#Mostrar Matriz
+for i in range(3): #--> Recorre clusters SOM
+    for j in range(3): 
+        print(f'Som: {i}, K: {j}: {matriz_contingencia[i,j]}') 
+
+print('Filas')
+print(suma_filas)
+
+print('Columnas')
+print(suma_columnas)
+
+total_filas = sum(suma_filas)
+total_columnas = sum(suma_columnas)
+# Verificación del total de datos
+print(f"\nTotal por Filas: {total_filas}")
+print(f"Total por Columnas: {total_columnas}")
+
+
+# Si hay un total conocido de datos (por ejemplo, n=6)
+print(f"Total esperado: {cant_filas}")
+print(f"\n¿Coinciden las sumas con el total de datos? {'Sí' if total_filas == cant_filas and total_columnas == cant_filas else 'No'}")

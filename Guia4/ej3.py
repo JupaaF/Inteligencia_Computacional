@@ -5,12 +5,10 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import davies_bouldin_score, silhouette_score
 from sklearn import datasets
 
-iris = datasets.load_iris()
-x = iris.data # Características
-y = iris.target  # Etiquetas (especies)
+x = np.loadtxt('Guia4/irisbin_trn.csv', delimiter=',')
 [cant_filas,cant_columnas]= x.shape
-
-cant_max_it = 1000
+x = x[:,:-3]
+print(x[1,:])
 davies_bouldin_scores = []
 silhouette_scores = []
 inertia_values = []
@@ -21,8 +19,6 @@ for k in range(2,11):
     
     # Predecir las etiquetas de los clústeres
     clusters = kmeans.labels_
-
-    
 
     #Separación: -------------------
     # Mide qué tan cerca están los puntos de los clústeres vecinos. 
@@ -47,7 +43,7 @@ for k in range(2,11):
 k = np.linspace(2,10,9)
 
 # Graficar los resultados
-plt.figure(figsize=(12, 5))
+plt.figure(figsize=(14, 5))
 
 # Silhouette Score
 plt.subplot(1, 3, 1)
@@ -55,23 +51,23 @@ plt.grid()
 plt.plot(k, silhouette_scores, marker='o')
 plt.title('Silhouette Score por k')
 plt.xlabel('Número de Clústeres (k)')
-plt.ylabel('Silhouette Score')
+plt.ylabel('Separación')
 
 # Davies-Bouldin Score
-plt.subplot(1, 3, 2)
+plt.subplot(1, 3, 3)
 plt.grid()
 plt.plot(k, davies_bouldin_scores, marker='o', color='r')
 plt.title('Davies-Bouldin Score por k')
 plt.xlabel('Número de Clústeres (k)')
-plt.ylabel('Davies-Bouldin Score')
+plt.ylabel('Davies-Bouldin')
 
 # Inertia
-plt.subplot(1, 3, 3)
+plt.subplot(1, 3, 2)
 plt.grid()
 plt.plot(k, inertia_values, marker='o',color='g')
 plt.title('Inertia por k')
 plt.xlabel('Número de Clústeres (k)')
-plt.ylabel('Inertia')
+plt.ylabel('Cohesión')
 
 plt.tight_layout()
 plt.show()
