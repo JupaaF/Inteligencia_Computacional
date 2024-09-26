@@ -258,3 +258,4 @@ print(f"Total por Columnas: {total_columnas}")
 # Si hay un total conocido de datos (por ejemplo, n=6)
 print(f"Total esperado: {cant_filas}")
 print(f"\n¿Coinciden las sumas con el total de datos? {'Sí' if total_filas == cant_filas and total_columnas == cant_filas else 'No'}")
+

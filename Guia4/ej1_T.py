@@ -9,7 +9,7 @@ x = np.loadtxt('Guia4/te.csv', delimiter=',')
 
 #Parmetros del SOM ----------
 N1 = 7#(4x4)
-N2 = 7
+N2 = 1
 cantidad_entradas = 2
 
 #Inicializamos pesos
