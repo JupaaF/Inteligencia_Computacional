@@ -8,7 +8,6 @@ from sklearn import datasets
 x = np.loadtxt('Guia4/irisbin_trn.csv', delimiter=',')
 [cant_filas,cant_columnas]= x.shape
 x = x[:,:-3]
-print(x[1,:])
 davies_bouldin_scores = []
 silhouette_scores = []
 inertia_values = []

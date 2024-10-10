@@ -8,7 +8,7 @@ x = np.loadtxt('Guia4/te.csv', delimiter=',')
 [cant_filas,cant_columnas]= x.shape
 
 #Parmetros del SOM ----------
-N1 = 7#(4x4)
+N1 = 49
 N2 = 1
 cantidad_entradas = 2
 
@@ -140,7 +140,8 @@ while(it<cant_epocas):
              
     if(it % g == 0):
         graficar_vecinos(pesos)
-    
+
+plt.scatter(x[:,0],x[:,1]) 
 plt.ioff()  # Desactivar modo interactivo
 plt.show()  # Mostrar la última imagen
 

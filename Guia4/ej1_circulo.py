@@ -7,9 +7,9 @@ from graficar_vecinos import graficar_vecinos
 x = np.loadtxt('Guia4/circulo.csv', delimiter=',')
 [cant_filas,cant_columnas]= x.shape
 
-#Parmetros del SOM ----------
-N1 = 7#(4x4)
-N2 = 7
+#Parametros del SOM ----------
+N1 = 49
+N2 = 1
 cantidad_entradas = 2
 
 #Inicializamos pesos
@@ -140,7 +140,8 @@ while(it<cant_epocas):
              
     if(it % g == 0):
         graficar_vecinos(pesos)
-    
+
+plt.scatter(x[:,0],x[:,1]) 
 plt.ioff()  # Desactivar modo interactivo
 plt.show()  # Mostrar la última imagen
 
