@@ -6,10 +6,11 @@ cant_bits = 20
 
 x1 = -512
 x2 = 512
-cant_individuos = 11
-cant_iteraciones = 50
+cant_individuos = 100
+paridad = (cant_individuos+1)%2 
+cant_iteraciones = 2000
 it = 0
-tasa_mutacion_individuo = 30
+tasa_mutacion_individuo = 15
 
 
 def gen_fen(x):
@@ -25,6 +26,10 @@ def fitness(x):
     y = -x*np.sin(np.sqrt(np.abs(x)))
     return -y
 
+def ordenar(vector_f):
+    indices = list(range(len(vector_f)))
+    indices_ordenados = sorted(indices, key=lambda i:vector_f[i],reverse=True)
+    return indices_ordenados
 
 #Inicializar población --> 1) crear individuos como cadenas de bits
 poblacion = np.empty((cant_individuos,cant_bits),int)
@@ -41,8 +46,7 @@ for i in range(cant_individuos):
 
 # -->2) evaluar y guardar valores fitness
 f = fitness(vector_fen)
-indices_ord = [i for i, _ in sorted(enumerate(vector_fen), key=lambda x: x[1], reverse=True)]
-
+indices_ord = ordenar(f)
 
 #Repetir hasta cumplir aptitud
 best_fitness = []
@@ -51,13 +55,13 @@ while(it < cant_iteraciones):
  #Generar nueva poblacion
     ## definir hijitos y papas
     hijos = np.empty((cant_individuos,cant_bits),int)
-    padres = np.empty((cant_individuos-1,cant_bits),int)
+    padres = np.empty((cant_individuos,cant_bits),int)
+    hijos[paridad] = poblacion[indices_ord[paridad]]
     hijos[0] = poblacion[indices_ord[0]]
-
     best_fitness.append(f[indices_ord[0]])
 
     #seleccionar padres (metodo de ventana)
-    for i in range(cant_individuos-1): #cantidad de ventanas 
+    for i in range(cant_individuos-1-paridad): #cantidad de ventanas 
            #a) ruelta:  f = [4.5 2 3 0.5] divido sobre la suma
             #          =[0.45 0.2 0.3 0.05]
             # => hago sumo hasta cada uno: [0.45 0.6 0.95 1]
@@ -70,8 +74,8 @@ while(it < cant_iteraciones):
     #cruzas
     for i in range(0,cant_individuos-2,2):
         punto_de_cruce = random.randint(1,cant_bits-1)
-        hijos[i+1] = np.concatenate((padres[i,0:punto_de_cruce], padres[i+1,punto_de_cruce:]))
-        hijos[i+2] = np.concatenate((padres[i+1,0:punto_de_cruce], padres[i,punto_de_cruce:])) 
+        hijos[i+1+paridad] = np.concatenate((padres[i,0:punto_de_cruce], padres[i+1,punto_de_cruce:]))
+        hijos[i+2+paridad] = np.concatenate((padres[i+1,0:punto_de_cruce], padres[i,punto_de_cruce:])) 
 
 
     #reemplazamos toda la poblacion
@@ -88,7 +92,7 @@ while(it < cant_iteraciones):
 
     # -->2) evaluar y guardar valores fitness
     f = fitness(vector_fen)
-    indices_ord = [i for i, _ in sorted(enumerate(vector_fen), key=lambda x: x[1], reverse=True)]
+    indices_ord = ordenar(f)
     
     it += 1
     print(it)
