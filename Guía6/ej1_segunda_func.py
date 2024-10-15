@@ -1,29 +1,33 @@
 import numpy as np
 import random 
 import matplotlib.pyplot as plt
+import math
+cant_bits = 40
 
-cant_bits = 20
-
-x1 = -512
-x2 = 512
-cant_individuos = 100
+x1 = -100
+x2 = 100
+cant_individuos = 25
 paridad = (cant_individuos+1)%2 
-cant_iteraciones = 2000
+cant_iteraciones = 10000
 it = 0
 tasa_mutacion_individuo = 15
 
 
 def gen_fen(x):
-    sum = 0
-    for i in range (len(x)):
-        sum += (2**(len(x)-i-1))*x[i]
+    sum_x = 0
+    for i in range (20):
+        sum_x += (2**(20-i-1))*x[i]
     
-    sum = x1 + sum * (x2 - x1) / (2**len(x) - 1)
+    sum_x = x1 + sum_x * (x2 - x1) / (2**20 - 1)
+    sum_y = 0
+    for i in range (20,40):
+        sum_y += (2**(40-i-1))*x[i]
+    
+    sum_y = x1 + sum_y * (x2 - x1) / (2**20 - 1)
+    return [sum_x,sum_y]
 
-    return sum
-
-def fitness(x):
-    y = -x*np.sin(np.sqrt(np.abs(x)))
+def fitness(xy):
+    y = ((xy[0]**2 + xy[1]**2)**0.25) * (math.sin(50 * ((xy[0]**2 + xy[1]**2)**0.1))**2 + 1)
     return -y
 
 def ordenar(vector_f):
@@ -39,16 +43,16 @@ for i in range(cant_individuos):
         poblacion[i,j] = random.randint(0,1)
 
 #Evaluar-->1) traducir cadena de bit a parametros    
-vector_fen = np.empty(cant_individuos,float)
+vector_fen = np.empty((cant_individuos,2),float)
 for i in range(cant_individuos):
     vector_fen[i] = gen_fen(poblacion[i,:])
 
-
 # -->2) evaluar y guardar valores fitness
-f = fitness(vector_fen)
+f = np.empty(cant_individuos,float)
+for i in range(cant_individuos):
+    f[i] = fitness(vector_fen[i])
 indices_ord = ordenar(f)
-
-#Repetir hasta cumplir aptitud
+# #Repetir hasta cumplir aptitud
 best_fitness = []
 
 while(it < cant_iteraciones):
@@ -91,7 +95,8 @@ while(it < cant_iteraciones):
         vector_fen[i] = gen_fen(poblacion[i,:])
 
     # -->2) evaluar y guardar valores fitness
-    f = fitness(vector_fen)
+    for i in range(cant_individuos):
+        f[i] = fitness(vector_fen[i])
     indices_ord = ordenar(f)
     
     it += 1
