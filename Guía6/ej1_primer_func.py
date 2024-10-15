@@ -6,11 +6,11 @@ cant_bits = 20
 
 x1 = -512
 x2 = 512
-cant_individuos = 100
+cant_individuos = 10
 paridad = (cant_individuos+1)%2 
-cant_iteraciones = 2000
+cant_iteraciones = 100
 it = 0
-tasa_mutacion_individuo = 15
+tasa_mutacion_individuo = 5
 
 
 def gen_fen(x):

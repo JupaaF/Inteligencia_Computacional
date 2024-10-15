@@ -2,7 +2,7 @@ import numpy as np
 import random 
 import matplotlib.pyplot as plt
 import math
-cant_bits = 40
+cant_bits = 40 #primeros 20 para x, segundos 20 para y
 
 x1 = -100
 x2 = 100
