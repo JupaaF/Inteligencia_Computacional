@@ -100,8 +100,48 @@ while(it < cant_iteraciones):
 
 
 resultado = gen_fen(poblacion[indices_ord[0],:])
-print(vector_fen)
-print(resultado)
+# print(vector_fen)
+# print(resultado)
+
+print(f"Algoritmo Genético: --------------")
+print(f"El valor mínimo de x es: {resultado}")
+print(f"El valor mínimo de la función es: {-best_fitness[-1]}")
+
+# Metodo del gradiente descendiente -------------------------------------
+
+# Definir la función objetivo
+def f(x):
+    return -x * np.sin(np.sqrt(abs(x)))
+
+# Derivada de la función
+def f_derivada(x):
+    return -np.sin(np.sqrt(abs(x))) - (x**(2) * np.cos(np.sqrt(abs(x)))) / (2 *abs(x)* np.sqrt(abs(x)))
+
+# Gradiente descendiente
+def gradiente_descendiente(x0, v, tol, max_iter=10000):
+    x = x0
+    for i in range(max_iter):
+        grad = f_derivada(x)
+        if abs(grad) < tol:
+            break
+        x = x - v * grad
+        if(x>512 or x<-512):
+            x = x +v*grad
+        
+    return x
+
+# Parámetros iniciales
+x0 = np.random.uniform(-512, 512)  # Punto inicial aleatorio
+v = 0.01               # Tasa de aprendizaje
+tol = 1e-6                   # Tolerancia para detener
+
+# Ejecutar gradiente descendente
+min_x = gradiente_descendiente(x0, v, tol)
+
+print(f"Metodo del gradiente descendiente: --------------")
+print(f"El valor mínimo de x es: {min_x}")
+print(f"El valor mínimo de la función es: {f(min_x)}")
+
 
 
 plt.plot(best_fitness)
