@@ -6,11 +6,11 @@ cant_bits = 20
 
 x1 = -512
 x2 = 512
-cant_individuos = 10
+cant_individuos = 100
 paridad = (cant_individuos+1)%2 
 cant_iteraciones = 100
 it = 0
-tasa_mutacion_individuo = 5
+tasa_mutacion_individuo = 15
 
 
 def gen_fen(x):
@@ -62,13 +62,6 @@ while(it < cant_iteraciones):
 
     #seleccionar padres (metodo de ventana)
     for i in range(cant_individuos-1-paridad): #cantidad de ventanas 
-           #a) ruelta:  f = [4.5 2 3 0.5] divido sobre la suma
-            #          =[0.45 0.2 0.3 0.05]
-            # => hago sumo hasta cada uno: [0.45 0.6 0.95 1]
-            #      tiro un nro random entre 0 y 1 y si es 0<x<0.45, elijo el primero, etc etc
-            #b) ventana:  ordeno por fitness, elijo ventana, saco uno aleat de ese rango
-            #              y repito para otra ventana pequeña (puede salir 2 o más veces el mismo individio)   
-            #c) competencia:
         padres[i] = poblacion[indices_ord[random.randint(0,cant_individuos-i-1)],:]
 
     #cruzas

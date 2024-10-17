@@ -124,6 +124,7 @@ while(it < cant_iteraciones):
 resultado = gen_fen(poblacion[indices_ord[0],:])
 print(((best_fitness[-1]*coef_col)*len(resultado))/coef_ACC)
 print(resultado)
+print(len(resultado))
 
 
 plt.plot(best_fitness)
