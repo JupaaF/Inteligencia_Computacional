@@ -2,36 +2,94 @@ import numpy as np
 import random 
 import matplotlib.pyplot as plt
 import math
+import networkx as nx
+
+plt.ion()
+# Función para visualizar la mejor solución
+def actualizar_grafo(D, mejor_camino, iteracion):
+    plt.clf()  # Limpiar el gráfico anterior
+    G = nx.Graph()
+
+    # Añadir las ciudades como nodos
+    n_cities = D.shape[0]
+    for i in range(n_cities):
+        G.add_node(i, label=f'Ciudad {i+1}')
+
+    # Añadir las aristas según el mejor camino
+    for i in range(len(mejor_camino) - 1):
+        G.add_edge(mejor_camino[i], mejor_camino[i + 1], weight=D[mejor_camino[i], mejor_camino[i + 1]])
+
+    pos = nx.spring_layout(G, seed=42)  # Layout para distribuir los nodos
+
+    # Dibujar nodos
+    nx.draw_networkx_nodes(G, pos, node_size=700, node_color='lightblue')
+
+    # Dibujar aristas con pesos
+    nx.draw_networkx_edges(G, pos, edgelist=G.edges, width=2, edge_color='blue')
+    labels = nx.get_edge_attributes(G, 'weight')
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+
+    # Etiquetas de nodos
+    node_labels = nx.get_node_attributes(G, 'label')
+    nx.draw_networkx_labels(G, pos, labels=node_labels)
+
+    # Título con número de iteración
+    plt.title(f'Mejor camino en la iteración {iteracion}')
+    plt.axis('off')
+    plt.pause(1)  # Pausar para actualizar el gráfico
+
+
+### ------------------------------------------------------------------------------ 
+
+
 
 it = 0 
-cant_iteraciones = 300
-cant_hormigas = 50 ## k
-alpha = 2
+cant_iteraciones = 100
+cant_hormigas = 20 ## k
+alpha = 1
 beta = 2
+Q = 0.5
 
+## D distancias entre ciudades
 D = np.loadtxt('Guia7/gr17.csv', delimiter=',')
+
+# D = np.array([[0, 10, 15, 20, 25],
+#               [10, 0, 35, 25, 30],
+#               [15, 35, 0, 30, 20],
+#               [20, 25, 30, 0, 15],
+#               [25, 30, 20, 15, 0]])
+
 n = D.shape
 
-feromonas = np.empty(n,float)
+feromonas = np.empty(n,float) ##matriz
 
-
+## Matriz Tabu
+## ciudades que podria visitar, 1 o 0
 Nk = np.empty((cant_hormigas,n[0]),int)
-pk = np.empty(cant_hormigas,object)
+
+## Guarda el camino de la hormiga
+pk = np.empty(cant_hormigas,object) ## vector de vectores
+
+## constante de dispersión
+rho = 0.7
 
 ## inicializamos las feromonas en un rango chico
 for i in range(n[0]):
     for j in range(n[1]):
         feromonas[i,j] = random.uniform(0,0.1)
 
-## inicializamos las hormigas en el nodo cero como origen
-for k in range(cant_hormigas):
-    Nk[k,0] = 0
-    Nk[k,1:] = 1 
-
 
 #3.repetir
 while it < cant_iteraciones :
     #3.1 para cada hormiga
+
+    ## vector distancias hormigas
+    ## reinicializamos las distancias
+    dist_hormigas = np.zeros(cant_hormigas)
+    
+    ## suma de los deltas 
+    delta_feromonas = np.zeros(n) 
+    ## inicializamos las hormigas en el nodo cero como origen
     for k in range(cant_hormigas):
         Nk[k,0] = 0
         Nk[k,1:] = 1 
@@ -41,7 +99,7 @@ while it < cant_iteraciones :
         #3.1.1
         pk[k] = [0]
         #3.1.2 repetir
-        c = 0
+
         while len(pk[k]) < n[0] : 
            # for i in pk[k]:
             prob = []
@@ -59,16 +117,51 @@ while it < cant_iteraciones :
                 else: 
                     prob.append(0)
                 
-
-            ## print(np.sum(prob),c)                        
+            ## selecciona de manera aleatoria dependiendo de la probabilidad calculada
             indices = np.arange(len(prob))
-
             nodo_deseado = np.random.choice(indices, p=prob)
-            c += 1
 
             pk[k].append(nodo_deseado)
             Nk[k,nodo_deseado]=0
 
+        pk[k].append(0)
+
+        ## 3.1.3
+        ## calculo de la distancia del camino de las hormigas
+        ## recorremos las distancias matriz D con los indices
+        ## de pk
+        for i in range(len(pk[k])-1):
+            dist_hormigas[k] += D[pk[k][i],pk[k][i+1]] 
+
+
+    ## 3.2             
+    ## delta guarda la sumatoria de los deltas
+    for i in range(n[0]):
+        for j in range(n[1]):
+            feromonas[i,j] = (1-rho)*feromonas[i,j]
+            
+            ## delta guarda la sumatoria de los deltas
+            for k in range(cant_hormigas):
+                for z in range(len(pk[k])-1):
+                    ## comprobamos caminos
+                    if((pk[k][z] == i) and (pk[k][z+1] == j)):
+                        ## calculo delta feromonas
+                        ## delta_feromonas[i,j] += Q/dist_hormigas[k]  ## global
+                        # delta_feromonas[i,j] += Q ## uniforme
+                        delta_feromonas[i,j] += Q/D[i,j] ## local                         
+                         
+            feromonas[i,j] += delta_feromonas[i,j]
+
+#### ------------ graficar -------------------
+    if it % 10 == 0:
+        mejor_hormiga = np.argmin(dist_hormigas)
+        mejor_camino = pk[mejor_hormiga]
+        actualizar_grafo(D, mejor_camino, it)
+        print(f"mejor distancia: {dist_hormigas[mejor_hormiga]}")
+
     print(it)
     it+= 1
 
+
+plt.ioff()
+plt.show()
