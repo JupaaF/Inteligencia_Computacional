@@ -41,14 +41,13 @@ def actualizar_grafo(D, mejor_camino, iteracion):
 
 ### ------------------------------------------------------------------------------ 
 
-
-
 it = 0 
 cant_iteraciones = 100
 cant_hormigas = 20 ## k
 alpha = 1
 beta = 2
 Q = 0.5
+
 
 ## D distancias entre ciudades
 D = np.loadtxt('Guia7/gr17.csv', delimiter=',')
