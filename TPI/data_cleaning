@@ -1,0 +1,93 @@
+
+import pandas as pd
+import re
+import numpy as np
+# D = pd.read_csv('TPI/databases/Twitterdatainsheets_completo.csv')
+
+###--------- separar en archivos diferentes los dataset----
+
+# ## nombres datasets
+# vector_nombres = ["engagement_info", "location_info", "gender_info"]
+
+# # Encontrar los índices de las filas con valores nulos en todas las columnas excepto la primera
+# separadores = D.index[D.iloc[:, 1:].isnull().all(axis=1)].tolist()
+
+# # Añadir el primer y último índice para facilitar la división
+# separadores = [0] + separadores + [len(D)]
+
+# # Crear los datasets separados y guardarlos en archivos CSV
+# for i in range(len(separadores) - 2):
+#     # Definir el rango para cada dataset
+#     start = separadores[i] + 1  # Inicia después de la fila separadora
+#     end = separadores[i + 1]    # Termina justo en la siguiente fila separadora
+
+#     # Extraer el dataset correspondiente
+#     subset_df = D.iloc[start:end]
+
+#     # Guardar el subset en un nuevo archivo CSV
+#     subset_df.to_csv(f'{vector_nombres[i]}.csv', index=False)
+
+#     print(f'Dataset {i + 1} guardado en "{vector_nombres[i]}.csv"')
+
+
+### ------------ acomodar gender info en dic -----------------------
+
+gen = pd.read_csv('TPI/databases/gender_info.csv')
+
+mapa = gen.set_index('UserID')['Gender'].to_dict()
+
+
+### -----------  agregar columnas y limpiar engagement --------------- 
+
+
+eng = pd.read_csv('TPI/databases/engagement_info.csv')
+
+
+#### cleaning links
+# Expresión regular para detectar enlaces
+url_pattern = r"(http[s]?://\S*|www\.\S*)"
+hashtag_pattern = r"#\w+"
+mention_pattern = r"@\w+"
+
+def contains_link_hashtag_mention(text):
+    return (bool(re.search(url_pattern, text)),bool(re.search(mention_pattern, text)),bool(re.search(hashtag_pattern, text)))
+# Ejemplo de conjunto de datos de tweets
+
+def remove_links(text):
+    return re.sub(url_pattern, '', text)
+
+eng['link'] = None
+eng['mention'] = None
+eng['hashtag'] = None
+eng['gender'] = None
+
+
+for index, row in eng.iterrows():
+    # Ver links, menciones y hashtags
+    contains_link, contains_mention, contains_hashtag = contains_link_hashtag_mention(row[' text'])
+    
+    eng.at[index, 'link'] = contains_link
+    eng.at[index, 'mention'] = contains_mention
+    eng.at[index, 'hashtag'] = contains_hashtag
+
+    # Agregar género
+    if(mapa.get(row[' UserID'],0) != 0):
+        eng.at[index, 'gender'] = mapa[row[' UserID']]  # Añadir 0 si no se encuentra el UserID
+
+    ### sacar links del texto
+    eng.at[index, ' text'] = remove_links(row[' text'])
+
+
+# Guardar el resultado en un nuevo CSV
+eng.to_csv('databases/engagement_info_actualizado.csv', index=False)
+
+
+
+
+
+    
+
+    
+
+
+
