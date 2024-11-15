@@ -1,29 +1,40 @@
 import pandas as pd
 from transformers import BertTokenizer, BertModel
 import torch
-D = pd.read_csv('TPI/databases/Twitterdatainsheets.csv')
+import csv
+D = pd.read_csv('TPI/databases/engagement_info_actualizado.csv')
 
-# Cargar el tokenizador y el modelo BERT
+# Cargar modelo y tokenizador
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertModel.from_pretrained('bert-base-uncased')
-textos = D['text'].tolist()
 
-# Obtener los embeddings para cada texto
-batch_size = 8
-embeddings_oraciones = []
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
 
-# Procesar en lotes
-for i in range(0, len(textos), batch_size):
-    batch_texts = textos[i:i + batch_size]  # Obtener el lote actual de textos
-    tokens = tokenizer(batch_texts, padding=True, truncation=True, return_tensors='pt')
+batch_size = 256
 
-    with torch.no_grad():
-        salida = model(**tokens)
+csv_filename = "embeddings_BERT.csv"
 
-    # Extraer los embeddings de [CLS] y agregar al listado de embeddings
-    embeddings_oraciones.append(salida.last_hidden_state[:, 0, :])
+# Abrir el archivo en modo escritura
+with open(csv_filename, mode="w", newline="") as file:
+    writer = csv.writer(file)
 
-# Concatenar todos los embeddings
-embeddings_oraciones = torch.cat(embeddings_oraciones, dim=0)
-print(embeddings_oraciones)
-D.to_csv("archivo_con_embeddings.csv", index=False)
+    # Procesar y guardar cada embedding
+    with torch.no_grad():  # Desactiva cálculo de gradientes
+        for i in range(0, len(D), batch_size):
+            # Seleccionar un lote del DataFrame
+            batch = D.iloc[i:i + batch_size]
+            texts = batch[" text"].tolist()
+
+            # Tokenizar y generar embeddings
+            inputs = tokenizer(
+                texts, return_tensors="pt", padding=True, truncation=True, max_length=64
+            )
+            outputs = model(**inputs)
+            batch_embeddings = outputs.last_hidden_state[:, 0, :].numpy()  # Embedding de [CLS]
+
+            # Escribir los embeddings al archivo CSV
+            writer.writerows(batch_embeddings)
+
+print(f"Embeddings guardados en '{csv_filename}'")
+
