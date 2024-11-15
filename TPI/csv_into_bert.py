@@ -36,5 +36,3 @@ with open(csv_filename, mode="w", newline="") as file:
             # Escribir los embeddings al archivo CSV
             writer.writerows(batch_embeddings)
 
-print(f"Embeddings guardados en '{csv_filename}'")
-
